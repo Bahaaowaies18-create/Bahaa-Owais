@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+*.log
+npm-debug.log*
+
+# Local secrets and local overrides — never commit these.
+.env
+.env.*
+!.env.example
+gateway.json
+gateway.local.json
+
+.DS_Store
+.idea/
+.vscode/

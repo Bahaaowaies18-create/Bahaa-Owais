@@ -1,0 +1,64 @@
+{
+  "$comment": "Copy to config/gateway.json and point GATEWAY_CONFIG at it. Every field is optional; environment variables win over anything set here.",
+
+  "routing": {
+    "prefer": "free",
+    "fallbackForPinnedModels": false
+  },
+
+  "retry": {
+    "maxAttempts": 3,
+    "requestTimeoutMs": 120000,
+    "streamFirstTokenTimeoutMs": 30000,
+    "breakerThreshold": 3,
+    "breakerCooldownMs": 15000,
+    "breakerMaxCooldownMs": 300000
+  },
+
+  "routes": [
+    {
+      "model": "cheap-chat",
+      "description": "Free tiers first, paid only if they are all down",
+      "targets": [
+        "groq/llama-3.3-70b-versatile",
+        "cerebras/llama-3.3-70b",
+        "google/gemini-2.0-flash",
+        "openai/gpt-4o-mini"
+      ]
+    },
+    {
+      "model": "claude-sonnet-4-5",
+      "description": "Serve Claude Code from Anthropic, falling back to an open model",
+      "targets": [
+        "anthropic/claude-sonnet-4-5",
+        "openrouter/anthropic/claude-sonnet-4.5",
+        "deepseek/deepseek-chat"
+      ]
+    },
+    {
+      "model": "local-first",
+      "description": "Try the local runtime, then spill to a hosted free tier",
+      "targets": ["ollama/*", "groq/llama-3.3-70b-versatile"]
+    }
+  ],
+
+  "providers": [
+    {
+      "$comment": "Override just the base URL of a built-in provider.",
+      "id": "openai",
+      "baseUrl": "https://api.openai.com/v1"
+    },
+    {
+      "$comment": "Any OpenAI-compatible endpoint can be added this way.",
+      "id": "my-vllm",
+      "label": "Self-hosted vLLM",
+      "baseUrl": "https://llm.internal.example.com/v1",
+      "apiKeyEnv": "MY_VLLM_API_KEY",
+      "wire": "openai",
+      "priority": 60,
+      "free": true
+    }
+  ],
+
+  "disabledProviders": []
+}

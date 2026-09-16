@@ -1,0 +1,17 @@
+services:
+  gateway:
+    build: .
+    image: omniroute-gateway:local
+    ports:
+      - "8787:8787"
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: "8787"
+    restart: unless-stopped
+    # Uncomment to mount a JSON config with custom providers / routes.
+    # volumes:
+    #   - ./config/gateway.json:/app/config/gateway.json:ro
+    # environment:
+    #   GATEWAY_CONFIG: /app/config/gateway.json
