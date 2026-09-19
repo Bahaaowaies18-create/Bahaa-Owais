@@ -97,6 +97,17 @@ def _pick_text_color(img, box) -> str:
     return config.BRAND_DARK if _avg_luma(img, box) > 140 else config.BRAND_LIGHT
 
 
+def _pick_logo(img, box):
+    """بيختار نسخة الشعار المناسبة لسطوع الخلفية وراه."""
+    light_bg = _avg_luma(img, box) > 140
+    dark_variant = getattr(config, "BRAND_LOGO_DARK", None)
+    if light_bg and dark_variant:
+        p = resolve(dark_variant)
+        if p.exists():
+            return p
+    return resolve(config.BRAND_LOGO) if config.BRAND_LOGO else None
+
+
 def apply_branding(image_bytes: bytes) -> bytes:
     """بيركّب الشعار + كلمة SMILE_JO + شريط اللون على الصورة."""
     if not getattr(config, "BRAND_ENABLED", False):
@@ -122,11 +133,14 @@ def apply_branding(image_bytes: bytes) -> bytes:
         draw.rectangle([0, H - bar_h, W, H], fill=_hex(config.BRAND_PRIMARY) + (255,))
 
     # ── ٢) الشعار ───────────────────────────────────────────────────────────
-    logo_path = resolve(config.BRAND_LOGO) if config.BRAND_LOGO else None
     logo_bottom = pad
+    probe_w = int(W * config.BRAND_LOGO_SIZE)
+    probe_x, probe_y = _anchor(config.BRAND_POSITION, probe_w, probe_w, W, H, pad)
+    logo_path = _pick_logo(base, (probe_x, probe_y, probe_x + probe_w, probe_y + probe_w))
+
     if logo_path and logo_path.exists():
         logo = Image.open(logo_path).convert("RGBA")
-        target_w = int(W * config.BRAND_LOGO_SIZE)
+        target_w = probe_w
         target_h = round(logo.height * target_w / logo.width)
         logo = logo.resize((target_w, target_h), Image.LANCZOS)
 
