@@ -1,88 +1,151 @@
-"""نصوص الـ prompts المستخدمة بتوليد صور روز مع علبة الفنير المتحرك."""
+# -*- coding: utf-8 -*-
+"""
+بناء البرومبت — عادةً ما بتحتاج تعدّل هون.
+الإشي الوحيد اللي ممكن تلعب فيه: REALISM (شدّة الواقعية) إذا بدك.
+"""
 
-# البرومبت الأساسي: صورة روز وهي ماسكة علبة الفنير المتحرك
-MAIN_PROMPT = """Create one photorealistic vertical commercial photograph.
+import textwrap
 
-SUBJECT (from the FIRST reference image):
-Keep the exact same woman from the first reference image — identical face,
-skin tone, freckles, eyebrows, eye color and shape, lips, and her long dark
-wavy hair falling over her left shoulder. Keep her cream/ivory tailored
-blazer over the ivory satin button-down shirt. She must be instantly
-recognizable as the same person. Do not beautify, slim, reshape, or age her
-face. Natural warm smile, looking straight into the camera.
-
-PRODUCT (from the SECOND reference image):
-She is holding up the yellow orthodontic retainer / clear-aligner case from
-the second reference image. Reproduce the product exactly: glossy bright
-yellow plastic clamshell case, two small dark hinge dots on the top edge,
-and the round white sticker on the front with the blue triangle outline and
-the black "SMILE_JO" monogram logo inside it. The logo and text must stay
-sharp, upright, correctly spelled and fully readable.
-
-IMPORTANT: use ONLY the product from the second image. Do NOT copy the woman,
-hair, clothing, lighting, or background from the second image.
-
-POSE AND FRAMING:
-Waist-up vertical portrait. She holds the closed yellow case up beside her
-face at about cheek height with her right hand, fingers relaxed and natural
-(five correct fingers, no distortion), the sticker side facing the camera and
-not covered by her fingers. Her face stays fully visible and unobstructed.
-
-LIGHTING AND BACKGROUND:
-Same clean studio look as the first reference image: soft warm beige seamless
-background, soft large key light from the front-left with a gentle fill,
-smooth natural skin texture with realistic pores, no harsh shadows.
-
-STYLE:
-High-end dental clinic advertising photography, shot on 85mm lens, shallow
-depth of field, product and face both in sharp focus, true-to-life colors.
-No text overlays, no watermarks, no logos other than the one on the case,
-no extra hands or people in the frame."""
+import config
 
 
-# نسخة بديلة: كلوز أب أكثر على المنتج
-CLOSEUP_PROMPT = """Photorealistic vertical close-up commercial photo.
-
-Keep the exact same woman from the FIRST reference image (identical face,
-features, dark wavy hair and cream blazer with ivory satin shirt) — same
-person, unmodified face.
-
-She is holding the yellow orthodontic retainer case from the SECOND reference
-image close to the camera with her right hand: glossy yellow clamshell case,
-two dark hinge dots on top, round white sticker with a blue triangle outline
-and the black "SMILE_JO" monogram inside. Use only the product from the second
-image, nothing else from it.
-
-The case is slightly closer to the lens than her face, sticker facing the
-camera and fully readable, her smiling face soft-focused just behind it.
-Soft warm beige studio background, soft frontal key light, natural skin
-texture, realistic hand with five well-formed fingers.
-Clean dental-brand advertising look. No text overlays, no watermarks."""
+def _clean(text: str) -> str:
+    return textwrap.dedent(str(text)).strip()
 
 
-# نسخة عمودية للسوشال (ستوري/ريل) مع مساحة فاضية للكتابة
-SOCIAL_PROMPT = """Photorealistic 9:16 social media advertising photo for a
-dental clinic.
+# ═══════════════════════════════════════════════════════════════════════════
+#  بلوك الواقعية — هاد قلب القالب: ملامح حقيقية + تفاصيل 4K
+# ═══════════════════════════════════════════════════════════════════════════
+REALISM = """
+PHOTOREALISM AND DETAIL — highest priority:
 
-Keep the exact same woman from the FIRST reference image — identical face,
-features, long dark wavy hair, cream tailored blazer over ivory satin shirt.
-Same person, natural confident smile, looking at the camera.
+Ultra-detailed 4K editorial photograph, shot on a full-frame camera with an
+85mm f/1.8 portrait lens, RAW file quality, natural film-like micro-contrast.
 
-She holds up the yellow orthodontic retainer case from the SECOND reference
-image next to her face: glossy yellow clamshell, two dark hinge dots on the
-top edge, round white sticker with a blue triangle outline and the black
-"SMILE_JO" monogram, sharp and readable. Use only the product from the second
-image.
+FACIAL IDENTITY — must match the reference exactly:
+Preserve the person's real facial structure: the same jawline, chin, cheek
+bones, nose shape and width, eye shape, eye color and spacing, eyebrow shape
+and thickness, lip shape and thickness, hairline, and hair texture. Do NOT
+make the face younger, thinner, more symmetrical, or more "perfect" than the
+reference. Keep any freckles, moles, or asymmetries exactly where they are.
+The result must read as the same real person, not a lookalike.
 
-Compose her in the lower two thirds of the frame, slightly to the right, so
-the upper-left area stays as clean empty beige background for text. Soft warm
-beige seamless studio backdrop, soft diffused key light, shallow depth of
-field, premium commercial retouching.
-No text, no captions, no watermarks in the image itself."""
+SKIN — real, not retouched:
+Visible skin pores, fine vellus hair, natural texture and subtle
+imperfections, faint natural redness around the nose and under the eyes,
+realistic subsurface scattering with soft light passing through the ears and
+nose tip. Natural sebum sheen on the forehead, nose and cheekbones — not a
+uniform glow. Skin must NOT look smooth, plastic, waxy, airbrushed or
+3D-rendered. No beauty filter, no skin smoothing, no face slimming, no eye
+enlargement.
+
+EYES, LIPS, HAIR:
+Sharp natural catchlights in both eyes, visible iris fiber texture and limbal
+ring, natural corneal moisture, individually separated eyelashes with natural
+direction. Lips with real texture, fine vertical lines and uneven natural
+color. Individual hair strands visible along the hairline with a few natural
+flyaways catching the light.
+
+OPTICS AND COLOR:
+Tack-sharp focus on the near eye with natural depth-of-field falloff toward
+the ears and background. True-to-life color, neutral white balance, accurate
+skin tones, no over-saturation, no HDR glow, no heavy vignette, no artificial
+sharpening halos.
+"""
 
 
-PROMPTS = {
-    "main": MAIN_PROMPT,
-    "closeup": CLOSEUP_PROMPT,
-    "social": SOCIAL_PROMPT,
+# ═══════════════════════════════════════════════════════════════════════════
+#  الإشي اللي لازم يتجنبه
+# ═══════════════════════════════════════════════════════════════════════════
+NEGATIVE = """
+AVOID COMPLETELY:
+plastic or waxy skin, airbrushed or over-smoothed face, AI sheen, uncanny
+symmetry, doll-like features, a different person's face, extra or missing
+fingers, deformed or fused hands, warped or misspelled logo text, duplicated
+limbs, floating objects, text overlays, captions, watermarks, signatures,
+cartoon or 3D-render look, over-processed HDR.
+"""
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  تركيبات الكادر — اختار وحدة بـ --style
+# ═══════════════════════════════════════════════════════════════════════════
+FRAMINGS = {
+    # الوضعية اللي حاططها بملف config
+    "main": lambda: _clean(config.POSE),
+
+    # كلوز أب: المنتج قريب من العدسة والوجه وراه
+    "closeup": lambda: """
+Tight vertical close-up. She holds the product close to the camera with her
+right hand, slightly nearer to the lens than her face, the front label facing
+the camera and fully readable. Her smiling face sits just behind it, still
+sharp enough to read her expression. Shoulders and upper chest visible.
+""".strip(),
+
+    # ستوري/ريل مع مساحة فاضية للكتابة
+    "social": lambda: """
+Vertical 9:16 social-media frame. Compose her in the lower two thirds of the
+image, slightly to the right, holding the product up beside her face with her
+right hand. Keep the upper-left area as clean empty backdrop so text can be
+placed there later. Do not put any text in the image itself.
+""".strip(),
+
+    # بورتريه بدون منتج
+    "portrait": lambda: """
+Waist-up vertical studio portrait. Hands relaxed at her sides or lightly
+crossed in front, shoulders slightly angled to the camera, face turned toward
+the lens with a natural confident expression.
+""".strip(),
 }
+
+STYLES = sorted(FRAMINGS)
+
+
+def build_prompt(style: str = "main") -> str:
+    """يركّب البرومبت النهائي من ملف config + بلوك الواقعية."""
+    if style not in FRAMINGS:
+        raise ValueError(f"ستايل غير معروف: {style} — المتاح: {', '.join(STYLES)}")
+
+    has_product = bool(config.PRODUCT_IMAGE) and bool(str(config.PRODUCT_DESCRIPTION).strip())
+
+    parts = [
+        "Create ONE photorealistic vertical commercial photograph.",
+        "",
+        "SUBJECT — take the person from the FIRST reference image:",
+        _clean(config.PERSON_DESCRIPTION),
+        "Keep her exactly as she appears in the first reference image. She must "
+        "be instantly recognizable as the same person.",
+    ]
+
+    if has_product:
+        parts += [
+            "",
+            "PRODUCT — take it from the SECOND reference image:",
+            _clean(config.PRODUCT_DESCRIPTION),
+            "",
+            "IMPORTANT: use ONLY the product from the second image. Do NOT copy "
+            "any person, hair, clothing, lighting or background from it.",
+        ]
+
+    parts += [
+        "",
+        "POSE AND FRAMING:",
+        FRAMINGS[style](),
+        "",
+        "LIGHTING AND BACKGROUND:",
+        _clean(config.SCENE),
+        "",
+        _clean(REALISM),
+        "",
+        _clean(NEGATIVE),
+    ]
+
+    return "\n".join(parts)
+
+
+# توافق مع النسخة القديمة
+PROMPTS = {name: build_prompt(name) for name in STYLES}
+
+
+if __name__ == "__main__":  # للمعاينة:  python prompts.py
+    print(build_prompt("main"))
