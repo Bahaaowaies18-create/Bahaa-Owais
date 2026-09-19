@@ -68,6 +68,22 @@ cartoon or 3D-render look, over-processed HDR.
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+#  لوحة ألوان الهوية — بتخلي ألوان الصورة نفسها تمشي مع الإنستا
+# ═══════════════════════════════════════════════════════════════════════════
+def brand_palette_hint() -> str:
+    if not getattr(config, "BRAND_PALETTE_IN_PROMPT", False):
+        return ""
+    return f"""
+BRAND COLOR PALETTE — the photograph's own colors must sit in this palette:
+soft powder blue {config.BRAND_PRIMARY}, warm golden yellow {config.BRAND_ACCENT},
+near-black charcoal {config.BRAND_DARK}, and off-white {config.BRAND_LIGHT}.
+Keep the backdrop, wardrobe, props and light tint within these tones so the
+image matches the brand identity. Do not add any logo, lettering, sticker or
+watermark to the image — branding is applied afterwards.
+""".strip()
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 #  تركيبات الكادر — اختار وحدة بـ --style
 # ═══════════════════════════════════════════════════════════════════════════
 FRAMINGS = {
@@ -139,6 +155,10 @@ def build_prompt(style: str = "main") -> str:
         "",
         _clean(NEGATIVE),
     ]
+
+    hint = brand_palette_hint()
+    if hint:
+        parts += ["", hint]
 
     return "\n".join(parts)
 

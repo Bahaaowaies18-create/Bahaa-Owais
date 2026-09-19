@@ -78,3 +78,49 @@ UPSCALE_4K   = True     # يكبّر الناتج لعرض 3840px قبل الح�
 
 # الموديل — للواقعية الأعلى جرّب: "gemini-3-pro-image-preview"
 MODEL = "gemini-2.5-flash-image"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  ٧) الهوية البصرية — SMILE_JO
+#     الألوان هاي مستخرجة من صورة العلبة تبعتك.
+#     إذا ألوان الإنستا عندك مختلفة، بدّل الأكواد تحت بس.
+# ─────────────────────────────────────────────────────────────────────────────
+
+BRAND_ENABLED = True            # False = صورة بدون شعار
+
+# ملف الشعار (PNG بخلفية شفافة أحسن إشي)
+BRAND_LOGO = "assets/logo.png"
+
+# الكلمة اللي بتنكتب — بالإنجليزي
+BRAND_TEXT = "SMILE_JO"
+
+# ألوان الهوية
+BRAND_PRIMARY      = "#A3BEE3"   # أزرق المثلث
+BRAND_ACCENT       = "#F9C03C"   # أصفر العلبة
+BRAND_DARK         = "#23232A"   # أسود الشعار
+BRAND_LIGHT        = "#E6E6EE"   # أبيض الستيكر
+
+BRAND_TEXT_COLOR   = "auto"     # "auto" = يختار حسب الخلفية | أو حط كود لون
+BRAND_TEXT_SHADOW  = "#23232A"   # لون الظل خلف الكتابة
+
+# مكان الشعار: top-left | top-right | top-center
+#              bottom-left | bottom-right | bottom-center
+BRAND_POSITION = "top-right"
+
+# مكان الكتابة لما BRAND_TEXT_UNDER_LOGO = False
+BRAND_TEXT_POSITION = "bottom-center"
+BRAND_TEXT_UNDER_LOGO = True     # True = الكلمة تحت الشعار مباشرة
+
+# المقاسات كنسبة من عرض الصورة
+BRAND_LOGO_SIZE = 0.14           # حجم الشعار  (0.10 صغير — 0.20 كبير)
+BRAND_TEXT_SIZE = 0.030          # حجم الكتابة
+BRAND_MARGIN    = 0.045          # بعده عن الحافة
+BRAND_OPACITY   = 0.95           # الشفافية (1.0 = صريح تماماً)
+
+BRAND_BAR = True                 # شريط رفيع بلون الهوية تحت الصورة
+
+# خط الكتابة — حط مسار ملف .ttf إذا بدك خط الهوية بالضبط
+BRAND_FONT = None
+
+# يخلي ألوان الصورة نفسها (خلفية، إضاءة، إكسسوارات) تمشي مع الهوية
+BRAND_PALETTE_IN_PROMPT = True

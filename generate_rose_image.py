@@ -21,6 +21,7 @@ from datetime import datetime
 from pathlib import Path
 
 import config
+from branding import apply_branding
 from prompts import STYLES, build_prompt
 
 ROOT = Path(__file__).resolve().parent
@@ -227,6 +228,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--prompt", help="برومبت مخصص بالكامل")
     p.add_argument("--prompt-file", type=Path)
     p.add_argument("--no-upscale", action="store_true", help="بدون تكبير")
+    p.add_argument("--no-brand", action="store_true", help="بدون شعار")
     p.add_argument("--show-prompt", action="store_true", help="اطبع البرومبت وبس")
     p.add_argument("--size", default="1024x1536", help="أبعاد OpenAI")
     return p.parse_args()
@@ -274,9 +276,12 @@ def main() -> None:
         sys.exit("[!] ما طلعت ولا صورة. جرّب مرة تانية أو غيّر البرومبت.")
 
     do_upscale = config.UPSCALE_4K and not args.no_upscale
+    do_brand = config.BRAND_ENABLED and not args.no_brand
     for i, data in enumerate(images, start=1):
         if do_upscale:
             data = upscale(data)
+        if do_brand:
+            data = apply_branding(data)
         print(f"[✓] انحفظت: {save_image(data, args.out_dir, args.style, i)}")
 
 
