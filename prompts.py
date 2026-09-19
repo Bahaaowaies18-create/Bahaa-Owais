@@ -106,6 +106,49 @@ right hand. Keep the upper-left area as clean empty backdrop so text can be
 placed there later. Do not put any text in the image itself.
 """.strip(),
 
+
+    # ═══ ستايلات المحتوى ═══
+
+    # كاميرا أمامية — شكل طبيعي مش إعلان (الأقوى على الريلز)
+    "ugc": lambda: """
+Casual selfie-style vertical shot, as if she is filming herself on a phone
+front camera. Arm's-length framing, slight natural tilt, head and shoulders
+filling the frame. She holds the product up toward the camera with her other
+hand. Natural indoor daylight from a window, ordinary everyday setting — not
+a studio. Slightly imperfect framing and a relaxed, unposed expression like
+she is talking to a friend. Phone-camera look, not professional lighting.
+""".strip(),
+
+    # لايف ستايل — مقهى / سيارة / بيت
+    "lifestyle": lambda: """
+Candid lifestyle vertical photo in an everyday setting: a bright modern cafe
+by a window, or the driver's seat of a car in daylight. She is mid-moment —
+smiling naturally, looking slightly off-camera or into a small mirror, the
+product visible in her hand or resting on the table beside her. Soft natural
+window light, shallow depth of field, real-life background with gentle bokeh.
+Editorial lifestyle photography, not studio.
+""".strip(),
+
+    # المنتج لحاله — للكتالوج والموقع
+    "product": lambda: """
+Clean vertical product photograph of the product alone — no person in frame.
+The product sits centered on a smooth seamless surface, front label facing
+the camera and perfectly readable, with a soft natural shadow beneath it.
+Soft diffused studio lighting from above and the front-left, gentle specular
+highlights on the glossy surface, crisp edges, macro-level detail on the
+material and texture. E-commerce product photography, sharp throughout.
+""".strip(),
+
+    # مناسبات — عرس / تخرج / خطوبة
+    "seasonal": lambda: """
+Elegant vertical portrait for an occasion campaign. She is dressed up for a
+special event, warm confident smile, holding the product lightly near her
+shoulder. Soft flattering light with a gentle glow, tasteful and celebratory
+mood, elegant neutral background with soft depth. Leave clear empty space in
+the upper third of the frame for a campaign headline. High-end editorial
+campaign photography.
+""".strip(),
+
     # بورتريه بدون منتج
     "portrait": lambda: """
 Waist-up vertical studio portrait. Hands relaxed at her sides or lightly
@@ -116,6 +159,9 @@ the lens with a natural confident expression.
 
 STYLES = sorted(FRAMINGS)
 
+# ستايلات بتصوّر المنتج لحاله — بدون شخص
+PRODUCT_ONLY = {"product"}
+
 
 def build_prompt(style: str = "main") -> str:
     """يركّب البرومبت النهائي من ملف config + بلوك الواقعية."""
@@ -123,17 +169,28 @@ def build_prompt(style: str = "main") -> str:
         raise ValueError(f"ستايل غير معروف: {style} — المتاح: {', '.join(STYLES)}")
 
     has_product = bool(config.PRODUCT_IMAGE) and bool(str(config.PRODUCT_DESCRIPTION).strip())
+    product_only = style in PRODUCT_ONLY
 
-    parts = [
-        "Create ONE photorealistic vertical commercial photograph.",
-        "",
-        "SUBJECT — take the person from the FIRST reference image:",
-        _clean(config.PERSON_DESCRIPTION),
-        "Keep her exactly as she appears in the first reference image. She must "
-        "be instantly recognizable as the same person.",
-    ]
+    parts = ["Create ONE photorealistic vertical commercial photograph."]
 
-    if has_product:
+    if product_only:
+        parts += [
+            "",
+            "PRODUCT — reproduce it exactly from the reference image:",
+            _clean(config.PRODUCT_DESCRIPTION),
+            "",
+            "No person anywhere in the frame.",
+        ]
+    else:
+        parts += [
+            "",
+            "SUBJECT — take the person from the FIRST reference image:",
+            _clean(config.PERSON_DESCRIPTION),
+            "Keep her exactly as she appears in the first reference image. She "
+            "must be instantly recognizable as the same person.",
+        ]
+
+    if has_product and not product_only:
         parts += [
             "",
             "PRODUCT — take it from the SECOND reference image:",
