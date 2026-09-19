@@ -77,7 +77,7 @@ python generate_rose_image.py --style portrait  # بورتريه بدون منت
 
 ```python
 ASPECT_RATIO = "9:16"   # ستوري | "4:5" بوست | "1:1" مربع | "16:9" عرضي
-RESOLUTION   = "2K"     # "1K" | "2K" | "4K"
+RESOLUTION   = "4K"     # "1K" | "2K" | "4K"
 COUNT        = 2        # كم نسخة بكل تشغيلة
 UPSCALE_4K   = True     # يكبّر الناتج لعرض 3840px
 MODEL = "gemini-2.5-flash-image"

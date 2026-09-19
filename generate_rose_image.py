@@ -130,31 +130,51 @@ def generate_with_gemini(
             fields = types.ImageConfig.model_fields
             if resolution and "image_size" in fields:
                 out.append(
-                    types.GenerateContentConfig(
-                        response_modalities=["IMAGE"],
-                        image_config=types.ImageConfig(
-                            aspect_ratio=aspect_ratio, image_size=resolution
+                    (
+                        f"دقة {resolution}",
+                        types.GenerateContentConfig(
+                            response_modalities=["IMAGE"],
+                            image_config=types.ImageConfig(
+                                aspect_ratio=aspect_ratio, image_size=resolution
+                            ),
                         ),
                     )
                 )
             out.append(
-                types.GenerateContentConfig(
-                    response_modalities=["IMAGE"],
-                    image_config=types.ImageConfig(aspect_ratio=aspect_ratio),
+                (
+                    "الدقة الافتراضية للموديل",
+                    types.GenerateContentConfig(
+                        response_modalities=["IMAGE"],
+                        image_config=types.ImageConfig(aspect_ratio=aspect_ratio),
+                    ),
                 )
             )
-        out.append(types.GenerateContentConfig(response_modalities=["IMAGE"]))
-        out.append(types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]))
+        out.append(
+            ("بدون إعدادات صورة", types.GenerateContentConfig(response_modalities=["IMAGE"]))
+        )
+        out.append(
+            (
+                "وضع نص + صورة",
+                types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
+            )
+        )
         return out
 
     images: list[bytes] = []
     for i in range(count):
         response, last_error = None, None
-        for cfg in candidate_configs():
+        for attempt, (label, cfg) in enumerate(candidate_configs()):
             try:
                 response = client.models.generate_content(
                     model=model, contents=contents, config=cfg
                 )
+                if attempt > 0 and i == 0:
+                    print(
+                        f"[!] الموديل {model} ما قبل الإعداد المطلوب — "
+                        f"الصورة اتولّدت بـ({label}) مش بدقة {resolution}.\n"
+                        f"    للدقة الأعلى فعلياً، جرّب بـ config.py:\n"
+                        f'    MODEL = "gemini-3-pro-image-preview"'
+                    )
                 break
             except Exception as exc:  # noqa: BLE001 — منجرّب الإعداد اللي بعده
                 last_error = exc
