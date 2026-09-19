@@ -137,12 +137,12 @@ MODEL = "gemini-3-pro-image-preview"
 ```python
 BRAND_ENABLED  = True              # False = صورة بدون شعار
 BRAND_LOGO     = "assets/logo.png" # ملف الشعار
-BRAND_TEXT     = "SMILE_JO"        # الكلمة اللي بتنكتب
+BRAND_TEXT     = ""                # "" = الشعار لحاله
 
 BRAND_POSITION        = "top-right"    # مكان الشعار
 BRAND_TEXT_UNDER_LOGO = True           # الكلمة تحت الشعار
 
-BRAND_LOGO_SIZE = 0.14   # حجم الشعار كنسبة من عرض الصورة
+BRAND_LOGO_SIZE = 0.22   # حجم الشعار كنسبة من عرض الصورة
 BRAND_TEXT_SIZE = 0.030  # حجم الكتابة
 BRAND_MARGIN    = 0.045  # بعده عن الحافة
 BRAND_OPACITY   = 0.95   # الشفافية
@@ -194,12 +194,18 @@ python cutout_logo.py my_logo.png --white-bg --dark-variant
 خيارات: `--low` و `--high` بيتحكموا بحدّة القص (لو ضلّت بقايا خلفية، زيد
 `--low`؛ لو ضاعت تفاصيل خفيفة، نزّله).
 
-### كلمة SMILE_JO مكررة؟
+### كلمة SMILE_JO
 
-الشعار نفسه جواه كلمة `SMILE_JO`، وإحنا كمان بنكتبها تحته. إذا بدك الشعار بس:
+الشعار نفسه جواه كلمة `SMILE_JO`، فالافتراضي إنه ينحط لحاله بدون تكرار:
 
 ```python
 BRAND_TEXT = ""
+```
+
+بدك الكلمة كمان مكتوبة تحت الشعار؟ حط:
+
+```python
+BRAND_TEXT = "SMILE_JO"
 ```
 
 ```bash

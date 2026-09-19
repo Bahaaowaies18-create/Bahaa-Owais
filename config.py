@@ -96,7 +96,8 @@ BRAND_LOGO = "assets/logo.png"
 BRAND_LOGO_DARK = "assets/logo_dark.png"
 
 # الكلمة اللي بتنكتب — بالإنجليزي
-BRAND_TEXT = "SMILE_JO"
+BRAND_TEXT = ""                  # "" = الشعار لحاله (الكلمة أصلاً جواه)
+                                 # حط "SMILE_JO" إذا بدك الكلمة كمان تحته
 
 # ألوان الهوية — مستخرجة من ملف الشعار الأصلي
 BRAND_PRIMARY      = "#014FC9"   # أزرق المثلث
@@ -116,7 +117,7 @@ BRAND_TEXT_POSITION = "bottom-center"
 BRAND_TEXT_UNDER_LOGO = True     # True = الكلمة تحت الشعار مباشرة
 
 # المقاسات كنسبة من عرض الصورة
-BRAND_LOGO_SIZE = 0.16           # حجم الشعار  (0.10 صغير — 0.24 كبير)
+BRAND_LOGO_SIZE = 0.22           # حجم الشعار  (0.12 صغير — 0.28 كبير)
 BRAND_TEXT_SIZE = 0.030          # حجم الكتابة
 BRAND_MARGIN    = 0.045          # بعده عن الحافة
 BRAND_OPACITY   = 0.95           # الشفافية (1.0 = صريح تماماً)
