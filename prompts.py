@@ -169,3 +169,30 @@ PROMPTS = {name: build_prompt(name) for name in STYLES}
 
 if __name__ == "__main__":  # للمعاينة:  python prompts.py
     print(build_prompt("main"))
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  نسخة مختصرة من بلوك الواقعية — للاستعمال بالشات (ChatGPT)
+# ═══════════════════════════════════════════════════════════════════════════
+REALISM_SHORT = """
+PHOTOREALISM — highest priority:
+Ultra-detailed editorial photo, 85mm f/1.8 portrait lens, natural
+micro-contrast. Keep the person's real facial structure exactly as in the
+reference: same jawline, nose shape and width, eye shape and spacing,
+eyebrows, lips, hairline. Do NOT make the face younger, thinner or more
+symmetrical. Real skin with visible pores, fine texture and natural
+imperfections — no beauty filter, no smoothing, no plastic or waxy look.
+Sharp catchlights and individual eyelashes, individual hair strands at the
+hairline. True-to-life color, tack-sharp focus on the eyes.
+
+AVOID: plastic skin, airbrushed face, uncanny symmetry, a different person's
+face, deformed hands or extra fingers, text, captions, watermarks, any logo.
+"""
+
+
+def build_prompt_short(style: str = "main") -> str:
+    """نسخة أقصر — أنسب للصق بشات ChatGPT."""
+    full = build_prompt(style)
+    return full.replace(_clean(REALISM), _clean(REALISM_SHORT)).replace(
+        _clean(NEGATIVE), ""
+    ).replace("\n\n\n", "\n\n").strip()
