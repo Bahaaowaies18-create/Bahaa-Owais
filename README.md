@@ -48,7 +48,8 @@ python finish.py output/img1.png
 | `prompt.py` | ▶️ بتشغّله | يجهّز البرومبت |
 | `finish.py` | ▶️ بتشغّله | شعار + مقاسات |
 | `prompts.py` | ❌ | نص البرومبت + بلوك الواقعية |
-| `branding.py` | ❌ | تركيب الشعار |
+| `branding.py` | ❌ | تركيب الشعار والكتابة |
+| `arabic_text.py` | ❌ | يخلّي العربي ينكتب موصول ومن اليمين |
 | `upscale_image.py` | ❌ | التكبير والشحذ |
 | `cutout_logo.py` | 🔧 | يفرّغ خلفية أي شعار جديد |
 | `assets/` | ✅ | صورك المرجعية |
@@ -80,9 +81,13 @@ python prompt.py --style main      # ماسكة المنتج جنب وجهها
 python prompt.py --style closeup   # كلوز أب على المنتج
 python prompt.py --style social    # ستوري مع مساحة للكتابة
 python prompt.py --style portrait  # بورتريه بدون منتج
+python prompt.py --style candid    # عفوية — كأنها صورة مسروقة بلحظتها
 
 python prompt.py --short           # برومبت أقصر (لو الطويل ما ظبط)
 ```
+
+**`candid`** هو الستايل العفوي: ضحكة طبيعية، إضاءة شباك حقيقية، خلفية
+عيادة مش ستوديو، وكادر مايل شوي — وبيترك الثلث السفلي فاضي للكتابة.
 
 ---
 
@@ -106,6 +111,7 @@ OUTPUT_SIZES = ["story", "4k"]      # اللي بيطلّعه finish.py
 python finish.py صورتي.png --preset post     # مقاس واحد بس
 python finish.py *.png                       # كذا صورة مع بعض
 python finish.py صورتي.png --no-brand        # بدون شعار
+python finish.py صورتي.png --no-caption      # بدون كتابة
 python finish.py صورتي.png --sharpen 1.4     # شحذ أقوى
 ```
 
@@ -138,6 +144,35 @@ BRAND_BAR       = True          # شريط لون تحت الصورة
 ```bash
 python cutout_logo.py الشعار.jpg --dark-variant
 ```
+
+---
+
+## الكتابة على الصورة
+
+نفس فكرة الشعار: الجملة والاسم بينكتبوا بـ `finish.py` بعد التوليد، مش
+بالبرومبت — هيك الإملاء مظبوطة والعربي بيطلع موصول ومن اليمين لليسار.
+
+بملف `config.py`:
+
+```python
+CAPTION_ENABLED  = True
+CAPTION_TEXT     = "ابتسامتك تستاهل الأفضل"   # الجملة
+CAPTION_NAME     = "روز"                      # الاسم تحتها
+CAPTION_POSITION = "bottom-right"             # bottom-left مع الإنجليزي
+CAPTION_SIZE     = 0.058                      # حجم الجملة
+CAPTION_SCRIM    = True                       # تظليل خفيف تحتها
+```
+
+أو غيّرها بسرعة من سطر الأوامر بدون ما تفتح `config.py`:
+
+```bash
+python finish.py صورتي.png --caption "ابتسامة بتفرق" --name "روز"
+python finish.py صورتي.png --no-caption      # بدون كتابة
+python finish.py صورتي.png --no-brand        # بدون شعار
+```
+
+**الخط:** الكود بيدوّر على خط عربي بجهازك لحاله. إذا ما لقي بيحكيلك،
+ووقتها حط مسار خط بـ `CAPTION_FONT`.
 
 ---
 

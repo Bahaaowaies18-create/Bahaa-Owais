@@ -53,7 +53,8 @@
 | `prompt.py` | **يجهّز البرومبت للصق بـ ChatGPT** |
 | `finish.py` | **شعار + مقاسات الإنستا بعد التوليد** |
 | `prompts.py` | يبني نص البرومبت + بلوك الواقعية `REALISM` |
-| `branding.py` | يركّب الشعار |
+| `branding.py` | يركّب الشعار + الجملة + الاسم |
+| `arabic_text.py` | يوصّل الحروف العربية ويقلب الاتجاه للكتابة على الصورة |
 | `upscale_image.py` | تكبير وشحذ حدّة |
 | `cutout_logo.py` | يفرّغ خلفية أي شعار جديد |
 | `generate_rose_image.py` | توليد عبر API — **غير مستعمل** (محتفظين فيه لو صار معه مفتاح) |
@@ -69,10 +70,14 @@ PRODUCT_IMAGE = "assets/retainer_case.png"
 ASPECT_RATIO  = "9:16"      OUTPUT_SIZES = ["story", "4k"]      CROP_ANCHOR = 0.30
 BRAND_ENABLED = True        BRAND_TEXT = ""       BRAND_POSITION = "top-right"
 BRAND_LOGO_SIZE = 0.22      BRAND_BAR = True
+
+CAPTION_ENABLED = True      CAPTION_TEXT = "ابتسامتك تستاهل الأفضل"
+CAPTION_NAME = "روز"        CAPTION_POSITION = "bottom-right"
 ```
 
 **ستايلات جاهزة:** `main` (ماسكة المنتج جنب وجهها) · `closeup` (كلوز أب على
-المنتج) · `social` (ستوري مع مساحة للكتابة) · `portrait` (بدون منتج)
+المنتج) · `social` (ستوري مع مساحة للكتابة) · `portrait` (بدون منتج) ·
+`candid` (عفوية — ضحكة طبيعية وإضاءة شباك، بتترك الثلث السفلي للكتابة)
 
 ---
 
@@ -106,6 +111,8 @@ BRAND_LOGO_SIZE = 0.22      BRAND_BAR = True
 | "ستوري" / "ريل" | `--style social` + `ASPECT_RATIO="9:16"` |
 | "بوست انستا" | `ASPECT_RATIO="4:5"` + `OUTPUT_SIZES=["post"]` |
 | "بدون منتج" / "بورتريه" | `--style portrait` |
+| "عفوية" / "طبيعية" / "مش مترتبة" | `--style candid` |
+| "حطلي جملة" / "اكتب عليها" | `CAPTION_TEXT` + `CAPTION_NAME` |
 | "منتج تاني" | `PRODUCT_IMAGE` + `PRODUCT_DESCRIPTION` |
 | "بنت تانية" | `PERSON_IMAGE` + `PERSON_DESCRIPTION` |
 | "خلفية غامقة/زرقا" | `SCENE` |
@@ -139,14 +146,15 @@ python finish.py <الصورة>
 
 ### الخطوة ٥: كمّت وادفع
 
-البرانش: `claude/rose-image-veneer-box-n14iay`
+البرانش الحالي: `claude/smiley-joe-rose-code-e2xis4`
 
 ---
 
 ## قواعد ثابتة — لا تكسرها
 
-1. **الشعار بينحط بـ `finish.py` بعد التوليد، مش بالبرومبت.** موديلات الصور بتشوّه الشعارات
-   والكتابة. البرومبت أصلاً بيمنع الموديل يرسم أي شعار أو كتابة.
+1. **الشعار والكتابة بينحطوا بـ `finish.py` بعد التوليد، مش بالبرومبت.** موديلات الصور
+   بتشوّه الشعارات والكتابة — وبتكتب العربي مقطّع ومقلوب. البرومبت أصلاً بيمنع
+   الموديل يرسم أي شعار أو كتابة.
 2. **بلوك `REALISM` بـ `prompts.py` ما بينشال.** هو اللي بيمنع "الوجه
    البلاستيكي": مسام، ملمس بشرة، ثبات الملامح، عدسة 85mm.
 3. **ثبات الملامح أهم إشي عنده.** ممنوع الموديل ينحّف الوجه أو يصغّر الأنف أو

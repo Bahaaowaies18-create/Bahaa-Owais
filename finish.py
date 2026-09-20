@@ -7,6 +7,8 @@
     python finish.py صورتي.png --preset story  # مقاس واحد
     python finish.py *.png                     # كذا صورة مع بعض
     python finish.py صورتي.png --no-brand      # بدون شعار
+    python finish.py صورتي.png --no-caption    # بدون كتابة
+    python finish.py صورتي.png --caption "جملة تانية" --name "روز"
 
 الملفات الجاهزة بتنحفظ بمجلد output/
 """
@@ -30,7 +32,8 @@ OUTPUT_DIR = ROOT / "output"
 AS_JPEG = {"story", "post", "square"}
 
 
-def finish_one(src: Path, presets: list[str], brand: bool, sharpen: float) -> list[Path]:
+def finish_one(src: Path, presets: list[str], brand: bool, sharpen: float,
+               caption: bool = True) -> list[Path]:
     if not src.exists():
         print(f"[!] ما لقيت: {src}")
         return []
@@ -50,9 +53,9 @@ def finish_one(src: Path, presets: list[str], brand: bool, sharpen: float) -> li
         out_im.save(buf, format="PNG")
         data = buf.getvalue()
 
-        # ٢) وبعدين الشعار
-        if brand:
-            data = apply_branding(data)
+        # ٢) وبعدين الشعار والكتابة
+        if brand or caption:
+            data = apply_branding(data, caption=caption, brand=brand)
 
         as_jpeg = name in AS_JPEG
         dst = OUTPUT_DIR / f"{src.stem}_{name}{'.jpg' if as_jpeg else '.png'}"
@@ -69,8 +72,8 @@ def finish_one(src: Path, presets: list[str], brand: bool, sharpen: float) -> li
 
     if config.KEEP_BRANDED_ORIGINAL:
         data = src.read_bytes()
-        if brand:
-            data = apply_branding(data)
+        if brand or caption:
+            data = apply_branding(data, caption=caption, brand=brand)
         keep = OUTPUT_DIR / f"{src.stem}_full.png"
         keep.write_bytes(data)
         print(f"[✓] النسخة الكاملة: {keep.name}")
@@ -85,17 +88,31 @@ def main() -> None:
     p.add_argument("--preset", choices=sorted(PRESETS), action="append",
                    help="مقاس معيّن (بتقدر تكرره)")
     p.add_argument("--no-brand", action="store_true", help="بدون شعار")
+    p.add_argument("--no-caption", action="store_true", help="بدون كتابة")
+    p.add_argument("--caption", help="جملة غير اللي بـ config")
+    p.add_argument("--name", help="اسم غير اللي بـ config")
     p.add_argument("--sharpen", type=float, default=1.0, help="قوة الشحذ")
     args = p.parse_args()
 
+    # الجملة والاسم من سطر الأوامر بيغلبوا اللي بـ config
+    if args.caption is not None:
+        config.CAPTION_TEXT = args.caption
+    if args.name is not None:
+        config.CAPTION_NAME = args.name
+
     presets = args.preset or list(config.OUTPUT_SIZES)
     brand = config.BRAND_ENABLED and not args.no_brand
+    caption = config.CAPTION_ENABLED and not args.no_caption
 
-    print(f"[i] مقاسات: {', '.join(presets)} | شعار: {'نعم' if brand else 'لا'}\n")
+    line = str(config.CAPTION_TEXT or "").strip() if caption else ""
+    print(
+        f"[i] مقاسات: {', '.join(presets)} | شعار: {'نعم' if brand else 'لا'}"
+        f" | كتابة: {line or 'لا'}\n"
+    )
 
     total = []
     for src in args.sources:
-        total += finish_one(src, presets, brand, args.sharpen)
+        total += finish_one(src, presets, brand, args.sharpen, caption)
 
     print(f"\n[✓] خلص — {len(total)} ملف بمجلد output/")
 

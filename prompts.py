@@ -112,6 +112,38 @@ Waist-up vertical studio portrait. Hands relaxed at her sides or lightly
 crossed in front, shoulders slightly angled to the camera, face turned toward
 the lens with a natural confident expression.
 """.strip(),
+
+    # عفوية: كأنها صورة مسروقة بلحظتها — مش وقفة تصوير
+    "candid": lambda: """
+Candid, unposed lifestyle moment — it must look like a real photo taken a
+split second before she noticed the camera, NOT a posed studio shot.
+
+She is caught mid-movement in a bright modern dental-clinic reception: turning
+her head slightly toward the lens with a genuine spontaneous half-laugh,
+natural asymmetric smile, eyes crinkling at the corners, a few loose hair
+strands out of place across her cheek. Her shoulders are relaxed and angled
+away from the camera, weight on one leg, leaning lightly against a counter.
+She holds the product loosely and casually in one hand at chest height, as if
+she just picked it up mid-conversation — not presenting it to the camera.
+
+Slightly off-center framing with a small natural tilt, waist-up vertical crop,
+shallow depth of field, a soft out-of-focus foreground edge on one side as if
+shot past an object. Leave the lower third of the frame calm and uncluttered
+so a caption can sit there later. Absolutely no text, lettering or logo
+anywhere in the image.
+""".strip(),
+}
+
+# بعض الستايلات إلها إضاءة خاصة بتغلب SCENE اللي بملف config
+SCENE_OVERRIDES = {
+    "candid": """
+Real natural daylight from a large window on the left — soft, slightly uneven,
+with gentle real-life falloff and a warm bounce from a nearby wall. Not studio
+lighting, no softbox look, no seamless backdrop. The background is a real
+blurred interior: a light wall, a hint of a plant and warm ambient reflections,
+in soft focus. Slight natural lens flare and a touch of real-world imperfection
+in the light are welcome.
+""".strip(),
 }
 
 STYLES = sorted(FRAMINGS)
@@ -149,7 +181,7 @@ def build_prompt(style: str = "main") -> str:
         FRAMINGS[style](),
         "",
         "LIGHTING AND BACKGROUND:",
-        _clean(config.SCENE),
+        SCENE_OVERRIDES.get(style) or _clean(config.SCENE),
         "",
         _clean(REALISM),
         "",
