@@ -29,8 +29,17 @@ PRODUCT_IMAGE = "assets/retainer_case.png"
 PERSON_DESCRIPTION = """
 A woman in her late twenties with long dark brown wavy hair falling over her
 left shoulder, warm olive skin, thick natural eyebrows, light brown eyes,
-and a soft natural smile. She wears a cream tailored blazer over an ivory
-satin button-down shirt.
+and a soft natural smile.
+"""
+
+
+# اللبس — لحاله عشان تغيّره بدون ما تلمس وصف الوجه
+OUTFIT = """
+Relaxed casual everyday styling: a soft off-white ribbed knit top with a
+simple round neckline and loose three-quarter sleeves, worn slightly
+oversized, with light beige wide-leg trousers and a thin delicate gold chain
+necklace. Natural fabric folds and a little everyday creasing — no blazer, no
+lab coat, no uniform, nothing stiff or formal.
 """
 
 

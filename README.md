@@ -66,11 +66,30 @@ PERSON_IMAGE = "assets/sara.png"     # ← صورتك الجديدة
 
 PERSON_DESCRIPTION = """
 A woman in her thirties with shoulder-length straight black hair,
-fair skin, dark brown eyes, wearing a navy blue medical scrub top.
+fair skin, dark brown eyes.
 """
 ```
 
 **ما في منتج؟** حط `PRODUCT_IMAGE = None` والبرومبت بيتجاهله لحاله.
+
+---
+
+## تغيير اللبس
+
+اللبس بملف لحاله عن وصف الوجه، فبتغيّره بدون ما تلمس إشي تاني:
+
+```python
+OUTFIT = """
+A navy blue medical scrub top with short sleeves, crisp and clean.
+"""
+```
+
+**وإذا الصورة طالعة معك وبدك تبدّل اللبس بس؟** ارفعها لـ ChatGPT مع هاد
+البرومبت — بيبدّل اللبس وبيخلي الوجه والخلفية والوقفة زي ما هم:
+
+```bash
+python prompt.py --edit-outfit
+```
 
 ---
 
@@ -112,6 +131,7 @@ python finish.py صورتي.png --preset post     # مقاس واحد بس
 python finish.py *.png                       # كذا صورة مع بعض
 python finish.py صورتي.png --no-brand        # بدون شعار
 python finish.py صورتي.png --no-caption      # بدون كتابة
+python finish.py صورتي.png --logo-pos top-left  # الشعار عاليسار لهالصورة بس
 python finish.py صورتي.png --sharpen 1.4     # شحذ أقوى
 ```
 

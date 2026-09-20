@@ -91,6 +91,10 @@ def main() -> None:
     p.add_argument("--no-caption", action="store_true", help="بدون كتابة")
     p.add_argument("--caption", help="جملة غير اللي بـ config")
     p.add_argument("--name", help="اسم غير اللي بـ config")
+    p.add_argument("--logo-pos", dest="logo_pos",
+                   choices=["top-left", "top-right", "top-center",
+                            "bottom-left", "bottom-right", "bottom-center"],
+                   help="مكان الشعار لهالصورة بس")
     p.add_argument("--sharpen", type=float, default=1.0, help="قوة الشحذ")
     args = p.parse_args()
 
@@ -99,6 +103,8 @@ def main() -> None:
         config.CAPTION_TEXT = args.caption
     if args.name is not None:
         config.CAPTION_NAME = args.name
+    if args.logo_pos:
+        config.BRAND_POSITION = args.logo_pos
 
     presets = args.preset or list(config.OUTPUT_SIZES)
     brand = config.BRAND_ENABLED and not args.no_brand

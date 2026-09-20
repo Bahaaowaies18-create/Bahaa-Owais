@@ -161,9 +161,19 @@ def build_prompt(style: str = "main") -> str:
         "",
         "SUBJECT — take the person from the FIRST reference image:",
         _clean(config.PERSON_DESCRIPTION),
-        "Keep her exactly as she appears in the first reference image. She must "
-        "be instantly recognizable as the same person.",
+        "Keep her face, hair and body exactly as she appears in the first "
+        "reference image. She must be instantly recognizable as the same person.",
     ]
+
+    outfit = _clean(getattr(config, "OUTFIT", ""))
+    if outfit:
+        parts += [
+            "",
+            "WARDROBE — replace whatever she is wearing in the reference:",
+            outfit,
+            "Only the clothing changes. Her face, hair, skin and body stay "
+            "identical to the reference image.",
+        ]
 
     if has_product:
         parts += [
@@ -220,6 +230,27 @@ hairline. True-to-life color, tack-sharp focus on the eyes.
 AVOID: plastic skin, airbrushed face, uncanny symmetry, a different person's
 face, deformed hands or extra fingers, text, captions, watermarks, any logo.
 """
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  تعديل صورة جاهزة — تغيير اللبس بس بدون ما يتغيّر إشي تاني
+# ═══════════════════════════════════════════════════════════════════════════
+def build_outfit_edit() -> str:
+    """برومبت قصير بترفعه مع صورة جاهزة عشان يبدّل اللبس بس."""
+    return f"""Edit the attached photograph. Change ONLY her clothing.
+
+NEW WARDROBE:
+{_clean(getattr(config, "OUTFIT", ""))}
+
+Everything else must stay exactly as it is: the same face and expression, the
+same hair down to the loose strands, the same pose and hand position, the same
+object in her hand, the same background, the same lighting direction and color,
+the same camera angle and crop. Do not restyle or slim her face, do not smooth
+her skin, do not change her body shape or her hands.
+
+Render the new clothes with real fabric texture and natural folds, lit by the
+same light already in the photo so it looks like the original shot.
+Do not add any text, lettering, logo or watermark anywhere in the image."""
 
 
 def build_prompt_short(style: str = "main") -> str:

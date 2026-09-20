@@ -115,8 +115,9 @@ CAPTION_NAME = "روز"        CAPTION_POSITION = "bottom-right"
 | "حطلي جملة" / "اكتب عليها" | `CAPTION_TEXT` + `CAPTION_NAME` |
 | "منتج تاني" | `PRODUCT_IMAGE` + `PRODUCT_DESCRIPTION` |
 | "بنت تانية" | `PERSON_IMAGE` + `PERSON_DESCRIPTION` |
+| "غيّر لبسها" وهو باعت صورة جاهزة | `OUTFIT` + `python prompt.py --edit-outfit` |
 | "خلفية غامقة/زرقا" | `SCENE` |
-| لبس معيّن | `PERSON_DESCRIPTION` |
+| لبس معيّن | `OUTFIT` (منفصل عن وصف الوجه) |
 | "بدون شعار" | `finish.py --no-brand` |
 | "الشعار عاليسار" | `BRAND_POSITION` |
 
